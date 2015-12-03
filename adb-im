@@ -1,0 +1,28 @@
+#!/bin/bash
+read -r -a DEVS <<< $(adb devices |grep -v "^List of devices"|awk '{print $1}')
+DEVSNR=${#DEVS[@]}
+NRREGEX='^[0-9]+$'
+if [ $DEVSNR -lt 2 ]
+then
+  adb $1 $2 $3 $4 
+else
+  printf "\n"
+  for (( i=0; i<=$(( $DEVSNR -1 )); i++ ))
+  do    
+    printf "$i - ${DEVS[$i]}\n"
+  done  
+  printf "\n"
+  printf "Select a device: "
+  read INPUT
+  if ! [[ $INPUT =~ $NRREGEX ]]
+  then
+    printf "Bad input\n"
+    exit 1
+  elif [[ $INPUT -lt 0 || $INPUT -gt $(( $DEVSNR -1 )) ]]
+  then
+    printf "Wrong selection\n"
+    exit 2
+  else
+    adb -s ${DEVS[$INPUT]} $1 $2 $3 $4
+  fi
+fi
