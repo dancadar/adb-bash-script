@@ -6,30 +6,30 @@ NRREGEX='^[0-9]+$'
 
 if [ $DEVSNR -lt 2 ]
 then
-	$ADBBIN "$@"
+  $ADBBIN "$@"
 else
   if [[ $1 == "kill-server" || $1 == "start-server" || $1 == "root" || $1 == "unroot" || $1 == "usb" || $1 == "tcp" || $1 == "help" || $1 == "version" ]]
-		then
-		$ADBBIN "$@"
-	else
-		printf "\n"
-		for (( i=0; i<=$(( $DEVSNR -1 )); i++ ))
-		do
-			printf "$i - ${DEVS[$i]}\n"
-		done
-		printf "\n"
-		printf "Select a device: "
-		read INPUT
-		if ! [[ $INPUT =~ $NRREGEX ]]
-		then
-			printf "Bad input\n"
-			exit 1
-		elif [[ $INPUT -lt 0 || $INPUT -gt $(( $DEVSNR -1 )) ]]
-		then
-			printf "Wrong selection\n"
-			exit 2
-		else
-			$ADBBIN -s ${DEVS[$INPUT]} "$@"
-		fi
-	fi
+    then
+    $ADBBIN "$@"
+  else
+    printf "\n"
+    for (( i=0; i<=$(( $DEVSNR -1 )); i++ ))
+    do
+      printf "$i - ${DEVS[$i]}\n"
+    done
+    printf "\n"
+    printf "Select a device: "
+    read INPUT
+    if ! [[ $INPUT =~ $NRREGEX ]]
+    then
+      printf "Bad input\n"
+      exit 1
+    elif [[ $INPUT -lt 0 || $INPUT -gt $(( $DEVSNR -1 )) ]]
+    then
+      printf "Wrong selection\n"
+      exit 2
+    else
+      $ADBBIN -s ${DEVS[$INPUT]} "$@"
+    fi
+  fi
 fi
